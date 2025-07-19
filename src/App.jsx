@@ -62,9 +62,10 @@ function App() {
         },
         () => {
           setGeoError(true);
-          // Show snack for mobile users
-          if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            setSnack("Hey, check your GPS is ON and location permission is allowed. Then request again or refresh the page.");
+          // Improved mobile detection and message
+          const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+          if (isMobile) {
+            setSnack("Please enable GPS and allow location permissions in your browser settings, then try again.");
           }
         }
       );
@@ -97,6 +98,25 @@ function App() {
       });
   };
 
+  // Snack notification variable
+  const snackNotification = snack && (
+    <div style={{
+      position: 'fixed',
+      bottom: '60px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      background: '#222',
+      color: '#ffd700',
+      padding: '0.7rem 1.2rem',
+      borderRadius: '8px',
+      fontSize: '1rem',
+      zIndex: 999,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+    }}>
+      {snack}
+    </div>
+  );
+
   return (
     <div className="app-container">
       <h1 style={{color:'#fff', fontWeight:800, fontSize:'2.2rem', letterSpacing:'2px', marginBottom:'0.5rem', textShadow:'0 1px 8px #222'}}>Your Location Weather</h1>
@@ -123,11 +143,7 @@ function App() {
           )}
         </div>
       )}
-      {snack && (
-        <div style={{position:'fixed', bottom:'60px', left:'50%', transform:'translateX(-50%)', background:'#222', color:'#ffd700', padding:'0.7rem 1.2rem', borderRadius:'8px', fontSize:'1rem', zIndex:999, boxShadow:'0 2px 8px rgba(0,0,0,0.15)'}}>
-          {snack}
-        </div>
-      )}
+      {snackNotification}
       {weather && weather.currentConditions ? (
         <WeatherCard
           weather={weather.currentConditions}
