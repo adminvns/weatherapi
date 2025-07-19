@@ -17,7 +17,7 @@ A simple yet attractive weather web app based on your location or the input you 
 Then finally Just add a `.env` file with the following content:
 
 ```env
-VITE_WEATHER_API_KEY=your_api_key_here
+WEATHER_API_KEY=your_api_key_here
 ```
 
 You can get your API key from:
