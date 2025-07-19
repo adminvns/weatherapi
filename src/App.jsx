@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react';
 import WeatherCard from './WeatherCard';
 import './App.css';
 
+/**
+ * React component that displays current weather information based on the user's geolocation or a manually entered location.
+ *
+ * Integrates geolocation and manual search to fetch weather data, manages related UI state, and handles errors and user notifications. Provides a retry mechanism for geolocation permission errors and displays contextual tips and notifications for mobile users.
+ *
+ * @returns {JSX.Element} The rendered weather application interface.
+ */
 function App() {
   const [weather, setWeather] = useState(null);
   const [unit, setUnit] = useState('F');
