@@ -7,3 +7,5 @@
 /.idea
 /.history
 /.git
+# Local Netlify folder
+.netlify

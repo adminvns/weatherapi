@@ -17,8 +17,7 @@ function App() {
           position => {
             const lat = position.coords.latitude;
             const long = position.coords.longitude;
-            const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-            const api = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${long}?unitGroup=metric&key=${API_KEY}&contentType=json`;
+            const api = `/.netlify/functions/weather?location=${lat},${long}`;
             fetch(api)
               .then(res => {
                 if (!res.ok) throw new Error('API error');
@@ -42,8 +41,7 @@ function App() {
     setError(null);
     setWeather(null);
     setLastSearchType('manual');
-    const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-    const api = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(manualLocation)}?unitGroup=metric&key=${API_KEY}&contentType=json`;
+    const api = `/.netlify/functions/weather?location=${encodeURIComponent(manualLocation)}`;
     fetch(api)
       .then(res => {
         if (res.status === 400) {
