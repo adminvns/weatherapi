@@ -9,6 +9,8 @@ function App() {
   const [manualLocation, setManualLocation] = useState('');
   const [searching, setSearching] = useState(false);
   const [lastSearchType, setLastSearchType] = useState('geo'); // 'geo' or 'manual'
+  const [geoError, setGeoError] = useState(false);
+  const [snack, setSnack] = useState("");
 
   useEffect(() => {
     if (!searching && lastSearchType === 'geo') {
@@ -25,14 +27,49 @@ function App() {
               })
               .then(data => setWeather(data))
               .catch(() => setError('Failed to fetch weather data (CORS or API error)'));
+            setGeoError(false);
           },
-          () => setError('Geolocation permission denied')
+          () => {
+            setError('Geolocation permission denied');
+            setGeoError(true);
+          }
         );
       } else {
         setError('Geolocation not supported');
       }
     }
   }, [searching, lastSearchType]);
+  // Retry geolocation prompt
+  const handleRetryGeolocation = () => {
+    setError(null);
+    setSnack("");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const lat = position.coords.latitude;
+          const long = position.coords.longitude;
+          const api = `/.netlify/functions/weather?location=${lat},${long}`;
+          fetch(api)
+            .then(res => {
+              if (!res.ok) throw new Error('API error');
+              return res.json();
+            })
+            .then(data => {
+              setWeather(data);
+              setGeoError(false);
+            })
+            .catch(() => setError('Failed to fetch weather data (CORS or API error)'));
+        },
+        () => {
+          setGeoError(true);
+          // Show snack for mobile users
+          if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            setSnack("Hey, check your GPS is ON and location permission is allowed. Then request again or refresh the page.");
+          }
+        }
+      );
+    }
+  };
 
   const handleManualSearch = (e) => {
     e.preventDefault();
@@ -45,9 +82,9 @@ function App() {
     fetch(api)
       .then(res => {
         if (res.status === 400) {
-          throw new Error('Invalid location. Please enter a valid city name, address, or ZIP/postal code.');
+          throw new Error('Error: Check your location again or Location unavailable at the moment');
         }
-        if (!res.ok) throw new Error('API error');
+        if (!res.ok) throw new Error('Error: Check your location again or Location unavailable at the moment');
         return res.json();
       })
       .then(data => {
@@ -55,7 +92,7 @@ function App() {
         setSearching(false);
       })
       .catch((err) => {
-        setError(err.message || 'Failed to fetch weather data (CORS or API error)');
+        setError('Error: Check your location again or Location unavailable at the moment');
         setSearching(false);
       });
   };
@@ -78,7 +115,19 @@ function App() {
           <button type="submit" style={{padding:'0.5rem 1.2rem', fontSize:'1rem', borderRadius:'6px', background:'#ffd700', color:'#222', fontWeight:600, border:'none', cursor:'pointer'}}>Search</button>
         </div>
       </form>
-      {error && <div className="error">{error}</div>}
+      {error && (
+        <div className="error" style={{marginBottom:'0.7rem'}}>
+          {error}
+          {geoError && (
+            <button onClick={handleRetryGeolocation} style={{marginLeft:'1rem', padding:'0.3rem 0.8rem', fontSize:'0.95rem', borderRadius:'5px', background:'#007bff', color:'#fff', border:'none', cursor:'pointer'}}>Request Location Again</button>
+          )}
+        </div>
+      )}
+      {snack && (
+        <div style={{position:'fixed', bottom:'60px', left:'50%', transform:'translateX(-50%)', background:'#222', color:'#ffd700', padding:'0.7rem 1.2rem', borderRadius:'8px', fontSize:'1rem', zIndex:999, boxShadow:'0 2px 8px rgba(0,0,0,0.15)'}}>
+          {snack}
+        </div>
+      )}
       {weather && weather.currentConditions ? (
         <WeatherCard
           weather={weather.currentConditions}
