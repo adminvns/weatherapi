@@ -1,0 +1,9 @@
+.env
+/node_modules
+/build
+/.cache
+.DS_Store
+/.vscode
+/.idea
+/.history
+/.git

@@ -1,0 +1,95 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(120deg, #232526 0%, #414345 100%);
+  min-height: 100vh;
+  color: #f5f6fa;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.weather-card {
+  background: rgba(30, 30, 40, 0.95);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  padding: 2.5rem 2.5rem;
+  margin-top: 2rem;
+  text-align: center;
+  max-width: 480px;
+  min-width: 340px;
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+}
+
+.temperature-section {
+  cursor: pointer;
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  color: #ffd700;
+  text-shadow: 0 2px 8px #000a;
+}
+
+.temperature-degree {
+  margin-right: 0.5rem;
+}
+
+.temperature-unit {
+  font-size: 1.3rem;
+  color: #ffd700;
+  font-weight: 500;
+}
+
+.temperature-description {
+  font-size: 1.2rem;
+  color: #f5f6fa;
+  margin-top: 0.5rem;
+  opacity: 0.85;
+}
+
+.weather-card h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  color: #ffd700;
+  letter-spacing: 1px;
+}
+
+.weather-card canvas {
+  margin-bottom: 1.2rem;
+  background: transparent;
+}
+
+.error {
+  color: #ff6b6b;
+  background: #2d2d2d;
+  border-radius: 0.7rem;
+  padding: 0.9rem 1.2rem;
+  margin-top: 1rem;
+  border: 1px solid #ff6b6b44;
+}
+
+.loading-spinner {
+  margin: 2rem auto;
+  border: 6px solid #232526;
+  border-top: 6px solid #ffd700;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
